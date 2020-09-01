@@ -1,0 +1,14 @@
+import numpy as np
+import pandas as pd
+from pandas_datareader import data as wb
+import matplotlib.pyplot as plt
+
+tickers = ['ULTRACEMCO.NS', 'HCLTECH.NS', 'HINDUNILVR.NS', 'MARUTI.NS', 'BAJFINANCE.NS', 'SUNPHARMA.NS']
+p_data = pd.DataFrame()
+for t in tickers:
+    p_data[t] = wb.DataReader(t, data_source = 'yahoo', start = '2015-1-1')['Adj Close']
+    (p_data/p_data.iloc[0]*100).plot(figsize=(15,10))
+    log_returns = np.log(1+p_data.pct_change(1))
+    log_returns[['ULTRACEMCO.NS', 'HCLTECH.NS', 'HINDUNILVR.NS', 'MARUTI.NS', 'BAJFINANCE.NS', 'SUNPHARMA.NS']].mean()*250
+    log_returns[['ULTRACEMCO.NS', 'HCLTECH.NS', 'HINDUNILVR.NS', 'MARUTI.NS', 'BAJFINANCE.NS', 'SUNPHARMA.NS']].std()*250**0.5
+    corr_matrix= log_returns.corr()
